@@ -24,7 +24,7 @@
 
         /* 專門為 iPhone 設計的強制 AR 按鈕樣式 */
         #ios-ar-btn {
-            display: none; /* 預設隱藏，由 JS 判斷是 iPhone 才顯示 */
+            display: none;
             position: absolute;
             bottom: 24px;
             left: 50%;
@@ -51,25 +51,23 @@
         ar-modes="webxr scene-viewer quick-look" 
         camera-controls 
         shadow-intensity="1"
+        shadow-softness="1"
         autoplay
         animation-name="*">
     </model-viewer>
 
-    <a id="ios-ar-btn" href="test003.usdz#checkoutPosition=0,0,-2.5" rel="ar">
+    <a id="ios-ar-btn" href="test003.usdz#checkoutPosition=0,0,-4.0" rel="ar">
         <img src="https://modelviewer.dev/assets/ic_view_in_ar_new_googblue_48dp.png" style="width:20px; vertical-align:middle; margin-right:8px;">
         進入 AR 模式
     </a>
 
     <script>
-        // 自動偵測是不是 iOS (iPhone/iPad)
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
                       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
         if (isIOS) {
-            // 如果是 iPhone，顯示我們自訂的強制按鈕
             document.getElementById('ios-ar-btn').style.display = 'block';
             
-            // 隱藏 model-viewer 原本可能壞掉或沒出現的預設按鈕
             const viewer = document.getElementById('viewer');
             viewer.addEventListener('load', () => {
                 const shadowBtn = viewer.shadowRoot.querySelector('.ar-button');
