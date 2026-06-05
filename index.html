@@ -22,20 +22,22 @@
             height: 100vh;
             --poster-color: transparent;
         }
+        /* 確保 AR 按鈕不論如何都絕對不會被系統隱藏 */
+        [slot="ar-button"] {
+            display: block !important;
+        }
     </style>
 </head>
 <body>
 
     <model-viewer 
         src="test003.glb" 
-        ios-src="test003.usdz" 
+        ios-src="test003.usdz#allowsSquareFootage=0&canonicalWebPageURL=https://google.com" 
         alt="一隻可愛的動態虎鯨" 
         autoplay
         camera-controls 
         ar 
-        ar-modes="quick-look webxr scene-viewer"
-        ar-scale="fixed"
-        scale="0.3 0.3 0.3">
+        ar-modes="quick-look webxr scene-viewer">
         
         <button slot="ar-button" style="background-color: #007aff; color: white; border: none; border-radius: 8px; padding: 14px 28px; position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); font-size: 16px; font-weight: bold; box-shadow: 0 4px 16px rgba(0,0,0,0.3); cursor: pointer; z-index: 999;">
             👋 點擊進入 AR 空間
