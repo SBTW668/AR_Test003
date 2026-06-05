@@ -8,7 +8,6 @@
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
 
     <style>
-        /* 讓 3D 畫布佔滿手機整個螢幕 */
         body, html {
             margin: 0;
             padding: 0;
@@ -22,11 +21,30 @@
             width: 100vw;
             height: 100vh;
         }
+
+        /* 專門為 iPhone 設計的強制 AR 按鈕樣式 */
+        #ios-ar-btn {
+            display: none; /* 預設隱藏，由 JS 判斷是 iPhone 才顯示 */
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            z-index: 9999;
+        }
     </style>
 </head>
 <body>
 
     <model-viewer 
+        id="viewer"
         src="test003.glb" 
         ios-src="test003.usdz" 
         ar 
@@ -34,9 +52,31 @@
         camera-controls 
         shadow-intensity="1"
         autoplay
-        animation-name="*"
-        alt="我的 3D AR 模型">
+        animation-name="*">
     </model-viewer>
+
+    <a id="ios-ar-btn" href="test003.usdz" rel="ar">
+        <img src="https://modelviewer.dev/assets/ic_view_in_ar_new_googblue_48dp.png" style="width:20px; vertical-align:middle; margin-right:8px;">
+        進入 AR 模式
+    </a>
+
+    <script>
+        // 自動偵測是不是 iOS (iPhone/iPad)
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+        if (isIOS) {
+            // 如果是 iPhone，顯示我們自訂的強制按鈕
+            document.getElementById('ios-ar-btn').style.display = 'block';
+            
+            // 隱藏 model-viewer 原本可能壞掉或沒出現的預設按鈕
+            const viewer = document.getElementById('viewer');
+            viewer.addEventListener('load', () => {
+                const shadowBtn = viewer.shadowRoot.querySelector('.ar-button');
+                if(shadowBtn) shadowBtn.style.display = 'none';
+            });
+        }
+    </script>
 
 </body>
 </html>
