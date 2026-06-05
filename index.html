@@ -22,17 +22,13 @@
             height: 100vh;
             --poster-color: transparent;
         }
-        /* 確保 AR 按鈕不論如何都絕對不會被系統隱藏 */
-        [slot="ar-button"] {
-            display: block !important;
-        }
     </style>
 </head>
 <body>
 
     <model-viewer 
         src="test003.glb" 
-        ios-src="test003.usdz#allowsSquareFootage=0&canonicalWebPageURL=https://google.com" 
+        ios-src="test003.usdz" 
         alt="一隻可愛的動態虎鯨" 
         autoplay
         camera-controls 
