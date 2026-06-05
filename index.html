@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>跨平台 3D AR 體驗 (test003)</title>
+    <title>跨平台 3D AR 體驗</title>
 
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
 
     <style>
-        /* 讓 3D 畫布佔滿手機整個螢幕，畫面最漂亮 */
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #f0f0f0;
+            background-color: #ffffff;
         }
 
         model-viewer {
@@ -23,27 +22,29 @@
             height: 100vh;
         }
 
-        /* 稍微美化一下預設的 AR 按鈕（非必要，但比較好看） */
-        #ar-button {
-            background-color: #ffffff;
-            border-radius: 20px;
-            padding: 12px 24px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #333333;
-            border: 1px solid #ccc;
+        /* 專門為 iPhone 設計的強制 AR 按鈕樣式 */
+        #ios-ar-btn {
+            display: none; /* 預設隱藏，由 JS 判斷是 iPhone 才顯示 */
             position: absolute;
             bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            cursor: pointer;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            z-index: 9999;
         }
     </style>
 </head>
 <body>
 
     <model-viewer 
+        id="viewer"
         src="test003.glb" 
         ios-src="test003.usdz" 
         ar 
@@ -51,14 +52,31 @@
         camera-controls 
         shadow-intensity="1"
         autoplay
-        animation-name="*"
-        alt="一個會動的 test003 AR 模型">
-        
-        <button slot="ar-button" id="ar-button">
-            進入 AR 模式 ➔
-        </button>
-        
+        animation-name="*">
     </model-viewer>
+
+    <a id="ios-ar-btn" href="test003.usdz" rel="ar">
+        <img src="https://modelviewer.dev/assets/ic_view_in_ar_new_googblue_48dp.png" style="width:20px; vertical-align:middle; margin-right:8px;">
+        進入 AR 模式
+    </a>
+
+    <script>
+        // 自動偵測是不是 iOS (iPhone/iPad)
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+        if (isIOS) {
+            // 如果是 iPhone，顯示我們自訂的強制按鈕
+            document.getElementById('ios-ar-btn').style.display = 'block';
+            
+            // 隱藏 model-viewer 原本可能壞掉或沒出現的預設按鈕
+            const viewer = document.getElementById('viewer');
+            viewer.addEventListener('load', () => {
+                const shadowBtn = viewer.shadowRoot.querySelector('.ar-button');
+                if(shadowBtn) shadowBtn.style.display = 'none';
+            });
+        }
+    </script>
 
 </body>
 </html>
